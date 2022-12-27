@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 const EditTaskPopup = ({ modal, toggle, updateTask, taskObj }) => {
     const [taskName, setTaskName] = useState('');
     const [description, setDescription] = useState('');
+    const [todoId, setTodoId] = useState('');
 
     const handleChange = (e) => {
 
@@ -19,16 +21,19 @@ const EditTaskPopup = ({ modal, toggle, updateTask, taskObj }) => {
     };
 
     useEffect(() => {
-        setTaskName(taskObj.Name);
-        setDescription(taskObj.Description);
+        setTaskName(taskObj.title);
+        setDescription(taskObj.description);
+        setTodoId(taskObj._id);
     }, []);
 
     const handleUpdate = (e) => {
         e.preventDefault();
         let tempObj = {};
-        tempObj['Name'] = taskName;
-        tempObj['Description'] = description;
-        updateTask(tempObj);
+        tempObj['title'] = taskName;
+        tempObj['description'] = description;
+        axios.put(`http://localhost:5000/api/todos/${todoId}`, tempObj)
+            .then((res) => window.location.replace('http://localhost:3000/'));
+        // updateTask(tempObj);
     };
 
     return (

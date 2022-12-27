@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import EditTask from '../modals/EditTask';
+import axios from 'axios';
 
 const Card = ({ taskObj, index, deleteTask, updateListArray }) => {
     const [modal, setModal] = useState(false);
@@ -32,23 +33,27 @@ const Card = ({ taskObj, index, deleteTask, updateListArray }) => {
     };
 
     const updateTask = (obj) => {
+        console.log(obj);
         updateListArray(obj, index);
     };
 
-    const handleDelete = () => {
-        deleteTask(index);
+    const handleDelete = (id) => {
+        console.log(id);
+        axios.delete(`http://localhost:5000/api/todos/${id}`)
+            .then((res) => window.location.replace('http://localhost:3000/'));
+        // deleteTask(index);
     };
 
     return (
         <div class="card-wrapper mr-5">
             <div class="card-top" style={{ "background-color": colors[index % 5].primaryColor }}></div>
             <div class="task-holder">
-                <span class="card-header" style={{ "background-color": colors[index % 5].secondaryColor, "border-radius": "10px" }}>{taskObj.Name}</span>
-                <p className="mt-3">{taskObj.Description}</p>
+                <span class="card-header" style={{ "background-color": colors[index % 5].secondaryColor, "border-radius": "10px" }}>{taskObj.title}</span>
+                <p className="mt-3">{taskObj.description}</p>
 
                 <div style={{ "position": "absolute", "right": "20px", "bottom": "20px" }}>
                     <i class="far fa-edit mr-3" style={{ "color": colors[index % 5].primaryColor, "cursor": "pointer" }} onClick={() => setModal(true)}></i>
-                    <i class="fas fa-trash-alt" style={{ "color": colors[index % 5].primaryColor, "cursor": "pointer" }} onClick={handleDelete}></i>
+                    <i class="fas fa-trash-alt" style={{ "color": colors[index % 5].primaryColor, "cursor": "pointer" }} onClick={() => handleDelete(taskObj._id)}></i>
                 </div>
             </div>
             <EditTask modal={modal} toggle={toggle} updateTask={updateTask} taskObj={taskObj} />

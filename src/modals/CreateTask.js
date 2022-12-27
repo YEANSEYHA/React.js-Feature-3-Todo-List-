@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 const CreateTask = ({ modal, toggle, save }) => {
@@ -14,9 +15,12 @@ const CreateTask = ({ modal, toggle, save }) => {
     };
     const handleSave = () => {
         let taskObj = {};
-        taskObj["Name"] = taskName;
-        taskObj["Description"] = description;
-        save(taskObj);
+        taskObj["title"] = taskName;
+        taskObj["description"] = description;
+        // save(taskObj);
+        axios.post(`http://localhost:5000/api/todos`, taskObj)
+            .then((res) => window.location.replace('http://localhost:3000/'));
+
     };
 
     return (

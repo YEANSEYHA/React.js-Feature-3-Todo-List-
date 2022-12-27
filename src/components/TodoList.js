@@ -8,13 +8,20 @@ import Card from './Card';
 const TodoList = () => {
     const [modal, setModal] = useState(false);
     const [taskList, setTaskList] = useState([]);
+    // Change get todo from localstorage to from api
     useEffect(() => {
-        let arr = localStorage.getItem("taskList");
 
-        if (arr) {
-            let obj = JSON.parse(arr);
-            setTaskList(obj);
-        }
+        fetch('http://localhost:5000/api/todos')
+            .then(response => response.json())
+            .then(json => setTaskList(json));
+        console.log(taskList);
+        console.log('i fire once');
+        // let arr = localStorage.getItem("taskList");
+
+        // if (arr) {
+        //     let obj = JSON.parse(arr);
+        //     setTaskList(obj);
+        // }
     }, []);
     const deleteTask = (index) => {
         let tempList = taskList;
