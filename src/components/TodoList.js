@@ -3,19 +3,27 @@ import CreateTask from '../modals/CreateTask';
 import { useState, useEffect } from 'react';
 import Card from './Card';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchTodos } from '../redux/slice/todo';
+
 
 
 const TodoList = () => {
+    const dispatch = useDispatch();
+    const todos = useSelector((state) => state.todo.data);
+    const isLoading = useSelector((state) => state.isLoading);
+    console.log('State', todos);
     const [modal, setModal] = useState(false);
     const [taskList, setTaskList] = useState([]);
     // Change get todo from localstorage to from api
     useEffect(() => {
-
-        fetch('http://localhost:5000/api/todos')
-            .then(response => response.json())
-            .then(json => setTaskList(json));
-        console.log(taskList);
-        console.log('i fire once');
+        dispatch(fetchTodos());
+        setTaskList(todos);
+        // fetch('http://localhost:5000/api/todos')
+        //     .then(response => response.json())
+        //     .then(json => setTaskList(json));
+        // console.log(taskList);
+        // console.log('i fire once');
         // let arr = localStorage.getItem("taskList");
 
         // if (arr) {
@@ -54,9 +62,12 @@ const TodoList = () => {
                 <h3>Todo List</h3>
                 <button className='btn btn-primary' onClick={() => setModal(true)}>Create Task</button>
             </div>
+
             <div className='task-container'>
-                {taskList && taskList.map((obj, index) => <Card taskObj={obj} index={index} deleteTask={deleteTask} updateListArray={updateListArray} />)}
+                {todos && todos.map((obj, index) => <Card taskObj={obj} index={index} deleteTask={deleteTask} updateListArray={updateListArray} />)}
             </div>
+
+
             <CreateTask toggle={toggle} modal={modal} save={saveTask} />
         </>
 
