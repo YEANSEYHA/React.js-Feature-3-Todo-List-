@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateTodo } from '../redux/slice/todo';
 
-const EditTaskPopup = ({ modal, toggle, updateTask, taskObj }) => {
+
+const EditTaskPopup = ({ modal, toggle, updateTask, taskObj, todoId }) => {
+    const dispatch = useDispatch();
     const [taskName, setTaskName] = useState('');
     const [description, setDescription] = useState('');
-    const [todoId, setTodoId] = useState('');
+    // const [todoId, setTodoId] = useState('');
 
     const handleChange = (e) => {
 
         const { name, value } = e.target;
-
+        console.log(e.target);
         if (name === "taskName") {
             setTaskName(value);
         } else {
@@ -23,7 +27,6 @@ const EditTaskPopup = ({ modal, toggle, updateTask, taskObj }) => {
     useEffect(() => {
         setTaskName(taskObj.title);
         setDescription(taskObj.description);
-        setTodoId(taskObj._id);
     }, []);
 
     const handleUpdate = (e) => {
@@ -31,8 +34,10 @@ const EditTaskPopup = ({ modal, toggle, updateTask, taskObj }) => {
         let tempObj = {};
         tempObj['title'] = taskName;
         tempObj['description'] = description;
-        axios.put(`http://localhost:5000/api/todos/${todoId}`, tempObj)
-            .then((res) => window.location.replace('http://localhost:3000/'));
+        tempObj['id'] = todoId;
+        dispatch(updateTodo(tempObj, todoId));
+        // axios.put(`http://localhost:5000/api/todos/${todoId}`, tempObj)
+        //     .then((res) => window.location.replace('http://localhost:3000/'));
         // updateTask(tempObj);
     };
 

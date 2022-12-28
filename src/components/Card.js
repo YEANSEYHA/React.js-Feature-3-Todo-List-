@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import EditTask from '../modals/EditTask';
 import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteTodo } from '../redux/slice/todo';
 
 const Card = ({ taskObj, index, deleteTask, updateListArray }) => {
+    const dispatch = useDispatch();
     const [modal, setModal] = useState(false);
 
     const colors = [
@@ -39,8 +42,10 @@ const Card = ({ taskObj, index, deleteTask, updateListArray }) => {
 
     const handleDelete = (id) => {
         console.log(id);
-        axios.delete(`http://localhost:5000/api/todos/${id}`)
-            .then((res) => window.location.replace('http://localhost:3000/'));
+        dispatch(deleteTodo(id));
+
+        // axios.delete(`http://localhost:5000/api/todos/${id}`)
+        //     .then((res) => window.location.replace('http://localhost:3000/'));
         // deleteTask(index);
     };
 
@@ -56,7 +61,7 @@ const Card = ({ taskObj, index, deleteTask, updateListArray }) => {
                     <i class="fas fa-trash-alt" style={{ "color": colors[index % 5].primaryColor, "cursor": "pointer" }} onClick={() => handleDelete(taskObj._id)}></i>
                 </div>
             </div>
-            <EditTask modal={modal} toggle={toggle} updateTask={updateTask} taskObj={taskObj} />
+            <EditTask modal={modal} toggle={toggle} updateTask={updateTask} taskObj={taskObj} todoId={taskObj._id} />
         </div>
     );
 };

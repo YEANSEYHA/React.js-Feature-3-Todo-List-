@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { createTodo } from '../redux/slice/todo';
 const CreateTask = ({ modal, toggle, save }) => {
     const [taskName, setTaskName] = useState('');
     const [description, setDescription] = useState('');
+    const dispatch = useDispatch();
     const handleChange = (e) => {
         const { name, value } = e.target;
         if (name === "taskName") {
@@ -17,9 +19,10 @@ const CreateTask = ({ modal, toggle, save }) => {
         let taskObj = {};
         taskObj["title"] = taskName;
         taskObj["description"] = description;
+        dispatch(createTodo(taskObj));
         // save(taskObj);
-        axios.post(`http://localhost:5000/api/todos`, taskObj)
-            .then((res) => window.location.replace('http://localhost:3000/'));
+        // axios.post(`http://localhost:5000/api/todos`, taskObj)
+        //     .then((res) => window.location.replace('http://localhost:3000/'));
 
     };
 
